@@ -1,16 +1,20 @@
 import os
+
 from flask import current_app
 
-from . import create_app_celery
+from . import create_app_celery, db
 from .celery import make_celery
-
+from .models import Task
 
 app = create_app_celery(os.getenv('FLASK_CONFIG') or 'default')
 celery_app = make_celery(app)
 
 
-@celery_app.task()
-def show_app_name():
-    name = current_app.name
-    print("current app name is %s" % name)
-    return name
+@celery_app.task(bind=True)
+def start_task(self):
+    task_uuid = self.request.id
+    task_db = db.session.query(Task).filter_by(uuid=task_uuid)
+    task_db.update({"status": "completed"})
+    db.session.commit()
+    print('app name is %s' % current_app.name)
+    print('task: %s is done.' % task_uuid)

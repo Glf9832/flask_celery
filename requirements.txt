@@ -11,3 +11,7 @@ pytest
 black
 flake8
 tox
+python-dotenv
+flask-migrate
+flask-restplus
+marshmallow

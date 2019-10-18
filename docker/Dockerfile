@@ -9,6 +9,8 @@ RUN groupadd dev \
 
 WORKDIR ${APP_HOME}
 
+# RUN apt-get install git \
+#     && git clone https://github.com/ryancartoon/flask_celery.git ./flask_celery
 COPY ./ ./flask_celery/
 
 RUN chown -R admin:dev flask_celery \
@@ -20,8 +22,6 @@ RUN python3 -m venv venv \
     && venv/bin/pip install --no-cache-dir -r flask_celery/requirements.txt
 
 ENV web_port 8000
-ENV redis_host redis
-ENV redis_port 6379
 
 EXPOSE $web_port
 

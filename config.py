@@ -4,8 +4,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
-    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    REDIS_URL = os.environ.get('REDIS_URL') or 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = REDIS_URL
+    CELERY_BROKER_URL = REDIS_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     @staticmethod
@@ -30,9 +31,9 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-        TESTING = True
-        SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-            'sqlite://'
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
+        'sqlite://'
 
 
 class ProductionConfig(Config):
